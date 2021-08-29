@@ -8,6 +8,9 @@ app.set('view engine', 'ejs');
 // use public folder
 app.use(express.static('public'));
 
+// enable req.body
+app.use(express.urlencoded({ extended: true }));
+
 // routes
 app.use(routes);
 
