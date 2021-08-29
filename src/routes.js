@@ -1,6 +1,16 @@
 const express = require('express');
 const routes = express.Router();
 
+const profile = {
+  name: 'jotahdavid',
+  avatar: 'https://avatars.githubusercontent.com/u/82552187?v=4',
+  'monthly-budget': 3000,
+  'days-per-week': 5,
+  'hours-per-day': 7,
+  'vacation-per-year': 4,
+  'value-per-hour': 75
+};
+
 const jobs = [
   {
     id: 1,
@@ -42,6 +52,6 @@ routes.post('/job', (req, res) => {
 
 routes.get('/job/edit', (req, res) => res.render(viewsPath + 'job-edit'));
 
-routes.get('/profile', (req, res) => res.render(viewsPath + 'profile'));
+routes.get('/profile', (req, res) => res.render(viewsPath + 'profile', { profile }));
 
 module.exports = routes;
