@@ -24,13 +24,45 @@ const jobs = [
     name: 'OneTwo Project',
     'daily-hours': 3,
     'total-hours': 45,
-    'created-at': Date.now()
+    'created-at': Date.now() + 50
   }
 ];
 
+function getRemainingDays(job) {
+  const totalDaysToJob = Math.floor(job['total-hours'] / job['daily-hours']);
+
+  const createdAt = new Date(job['created-at']);
+  const dueDay = createdAt.getDate() + totalDaysToJob;
+  const dueDate = createdAt.setDate(dueDay);
+
+  const timeDiffInMS = dueDate - Date.now();
+  const DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
+
+  const remainingDays = Math.floor(timeDiffInMS / DAY_IN_MILLISECONDS);
+
+  return remainingDays;
+};
+
 const viewsPath = __dirname + '/views/';
 
-routes.get('/', (req, res) => res.render(viewsPath + 'index'));
+routes.get('/', (req, res) => {
+  const updatedJobs = jobs.map(job => {
+    const remainingDays = getRemainingDays(job);
+
+    const status = remainingDays <= 0 ? 'done' : 'progress';
+    
+    const budget = profile['value-per-hour'] * job['total-hours'];
+
+    return {
+      ...job,
+      'remaining-days': remainingDays,
+      status,
+      budget
+    };
+  });
+
+  return res.render(viewsPath + 'index', { jobs: updatedJobs })
+});
 
 routes.get('/job', (req, res) => res.render(viewsPath + 'job'));
 
