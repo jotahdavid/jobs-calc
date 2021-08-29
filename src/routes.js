@@ -1,14 +1,14 @@
 const express = require('express');
 const routes = express.Router();
 
-const viewsPath = __dirname + '/views';
+const viewsPath = __dirname + '/views/';
 
-routes.get('/', (req, res) => res.sendFile(viewsPath + '/index.html'));
+routes.get('/', (req, res) => res.render(viewsPath + 'index'));
 
-routes.get('/job', (req, res) => res.sendFile(viewsPath + '/job.html'));
+routes.get('/job', (req, res) => res.render(viewsPath + 'job'));
 
-routes.get('/job/edit', (req, res) => res.sendFile(viewsPath + '/job-edit.html'));
+routes.get('/job/edit', (req, res) => res.render(viewsPath + 'job-edit'));
 
-routes.get('/profile', (req, res) => res.sendFile(viewsPath + '/profile.html'));
+routes.get('/profile', (req, res) => res.render(viewsPath + 'profile'));
 
 module.exports = routes;
