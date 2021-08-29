@@ -32,12 +32,15 @@
           <img id="logo" src="/images/logo.svg" alt="Logo" />
           <span id="notification">
             <img src="/images/alert-octagon.svg" alt="Alerta" />
-            Você tem 2 horas livres no seu dia
+            Você tem <%= 24 - profile['hours-per-day'] %>  horas livres no seu dia
           </span>
           <a href="/profile" id="avatar-profile">
-            <p>Jakeliny <span>Ver perfil</span></p>
+            <p>
+              <%= profile.name %>
+              <span>Ver perfil</span>
+            </p>
             <img
-              src="https://avatars.githubusercontent.com/u/17316392?s=460&u=6912a91a70bc89745a2079fdcdad3bc3ce370f13&v=4"
+              src="<%= profile.avatar %> "
             />
           </a>
         </section>
@@ -53,11 +56,15 @@
               Projetos ao total
             </div>
             <div class="in-progress">
-              <strong>-</strong>
+              <strong>
+                <%= jobs.filter(job => job.status === 'progress').length %>
+              </strong>
               Em andamento
             </div>
             <div class="finished">
-              <strong>-</strong>
+              <strong>
+                <%= jobs.filter(job => job.status === 'done').length %>
+              </strong>
               Encerrados
             </div>
           </div>
@@ -85,11 +92,7 @@
               <div class="deadline column">
                 <span>Prazo</span>
                 <p>
-                  <% if(job.status === 'progress') { %>
-                    <%= job['remaining-days'] %>  dias para a entrega
-                  <% } else { %>
-                    Prazo encerrado
-                  <% } %>
+                  <%= (job.status === 'progress' ? `${job['remaining-days']} dias para a entrega` : 'Prazo encerrado') %>
                 </p>
               </div>
               <div class="amount column">
