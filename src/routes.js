@@ -70,7 +70,7 @@ const Job = {
     
         const status = remainingDays <= 0 ? 'done' : 'progress';
         
-        const budget = Profile.data['value-per-hour'] * job['total-hours'];
+        const budget = Job.services.calculateBudget(job, Profile.data['value-per-hour']);
     
         return {
           ...job,
@@ -98,6 +98,44 @@ const Job = {
 
       return res.redirect('/');
     },
+
+    getById(req, res) {
+      const jobId = Number(req.params.id);
+
+      const job = Job.data.find(job => job.id === jobId);
+
+      if(!job) {
+        return res.redirect('/');
+      }
+
+      const budget = Job.services.calculateBudget(job, Profile.data['value-per-hour']);
+
+      const updatedJob = {
+        ...job,
+        budget,
+      };
+
+      return res.render(viewsPath + 'job-edit', { job: updatedJob });
+    },
+
+    update(req, res) {
+      const data = req.body;
+
+      const jobId = Number(req.params.id);
+      
+      const jobIndex = Job.data.findIndex(job => job.id === jobId);
+
+      if(jobIndex !== -1) {
+        Job.data[jobIndex] = {
+          ...Job.data[jobIndex],
+          name: data.name,
+          'daily-hours': Number(data['daily-hours']),
+          'total-hours': Number(data['total-hours']),
+        };
+      }
+
+      return res.redirect('/');
+    },
   },
 
   services: {
@@ -115,6 +153,10 @@ const Job = {
     
       return remainingDays;
     },
+
+    calculateBudget(job, valueHour) {
+      return valueHour * job['total-hours'];
+    },
   },
 };
 
@@ -125,7 +167,10 @@ routes.get('/', Job.controllers.index);
 routes.get('/job', (req, res) => res.render(viewsPath + 'job'));
 routes.post('/job', Job.controllers.save);
 
-routes.get('/job/edit', (req, res) => res.render(viewsPath + 'job-edit'));
+routes.get('/job/edit', (req, res) => res.redirect('/'));
+routes.get('/job/edit/:id', Job.controllers.getById);
+routes.post('/job/edit/:id', Job.controllers.update);
+
 
 routes.get('/profile', Profile.controllers.index);
 routes.post('/profile', Profile.controllers.update);
