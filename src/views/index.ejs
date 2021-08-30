@@ -32,7 +32,7 @@
           <img id="logo" src="/images/logo.svg" alt="Logo" />
           <span id="notification">
             <img src="/images/alert-octagon.svg" alt="Alerta" />
-            Você tem <%= 24 - profile['hours-per-day'] %>  horas livres no seu dia
+            <%= freeTime <= 0 ? 'Você não tem' : `Você tem ${freeTime}` %> horas livres no seu dia!
           </span>
           <a href="/profile" id="avatar-profile">
             <p>
@@ -52,18 +52,18 @@
 
           <div class="info">
             <div class="total">
-              <strong><%= jobs.length %> </strong>
+              <strong><%= statusCount.total %> </strong>
               Projetos ao total
             </div>
             <div class="in-progress">
               <strong>
-                <%= jobs.filter(job => job.status === 'progress').length %>
+                <%= statusCount.progress %>
               </strong>
               Em andamento
             </div>
             <div class="finished">
               <strong>
-                <%= jobs.filter(job => job.status === 'done').length %>
+                <%= statusCount.done %>
               </strong>
               Encerrados
             </div>
