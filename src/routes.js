@@ -14,7 +14,7 @@ const Profile = {
 
   controllers: {
     index(req, res) {
-      return res.render(viewsPath + 'profile', { profile: Profile.data });
+      return res.render('profile', { profile: Profile.data });
     },
 
     update(req, res) {
@@ -80,7 +80,7 @@ const Job = {
         };
       });
     
-      return res.render(viewsPath + 'index', { jobs: updatedJobs, profile: Profile.data });
+      return res.render('index', { jobs: updatedJobs, profile: Profile.data });
     },
 
     save(req, res) {
@@ -115,7 +115,7 @@ const Job = {
         budget,
       };
 
-      return res.render(viewsPath + 'job-edit', { job: updatedJob });
+      return res.render('job-edit', { job: updatedJob });
     },
 
     update(req, res) {
@@ -168,11 +168,9 @@ const Job = {
   },
 };
 
-const viewsPath = __dirname + '/views/';
-
 routes.get('/', Job.controllers.index);
 
-routes.get('/job', (req, res) => res.render(viewsPath + 'job'));
+routes.get('/job', (req, res) => res.render('job'));
 routes.post('/job', Job.controllers.save);
 
 routes.get('/job/edit', (req, res) => res.redirect('/'));

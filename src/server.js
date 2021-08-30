@@ -1,9 +1,13 @@
 const express = require('express');
 const app = express();
 const routes = require('./routes');
+const path = require('path');
 
 // use ejs as template engine
 app.set('view engine', 'ejs');
+
+// change the location of the views folder
+app.set('views', path.join(__dirname, 'views'));
 
 // use public folder
 app.use(express.static('public'));
