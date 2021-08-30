@@ -136,6 +136,14 @@ const Job = {
 
       return res.redirect('/');
     },
+
+    delete(req, res) {
+      const jobId = Number(req.params.id);
+      
+      Job.data = Job.data.filter(job => job.id !== jobId);
+
+      return res.redirect('/');
+    },
   },
 
   services: {
@@ -171,6 +179,7 @@ routes.get('/job/edit', (req, res) => res.redirect('/'));
 routes.get('/job/edit/:id', Job.controllers.getById);
 routes.post('/job/edit/:id', Job.controllers.update);
 
+routes.post('/job/delete/:id', Job.controllers.delete);
 
 routes.get('/profile', Profile.controllers.index);
 routes.post('/profile', Profile.controllers.update);
