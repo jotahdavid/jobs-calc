@@ -4,7 +4,8 @@
   "description": "Freelance Calculator",
   "main": "./src/server.js",
   "scripts": {
-    "start": "npm run db:init && nodemon .",
+    "start": "npm run db:init && node .",
+    "dev": "npm run db:init && nodemon .",
     "db:init": "node ./src/db/init.js"
   },
   "keywords": [],
