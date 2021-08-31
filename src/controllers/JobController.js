@@ -19,10 +19,9 @@ module.exports = {
 
   async getById(req, res) {
     const jobId = Number(req.params.id);
-    const jobs = await Job.get();
     const profile = await Profile.get();
 
-    const job = jobs.find(job => job.id === jobId);
+    const job = await JobUtils.getJobById(jobId);
 
     if(!job) {
       return res.redirect('/');
@@ -41,9 +40,8 @@ module.exports = {
   async update(req, res) {
     const data = req.body;
     const jobId = Number(req.params.id);
-    const jobs = await Job.get();
     
-    const job = jobs.find(job => job.id === jobId);
+    const job = await JobUtils.getJobById(jobId);
 
     if(job) {
       await Job.update({
@@ -59,9 +57,8 @@ module.exports = {
 
   async delete(req, res) {
     const jobId = Number(req.params.id);
-    const jobs = await Job.get();
 
-    const job = jobs.find(job => job.id === jobId);
+    const job = await JobUtils.getJobById(jobId);
 
     if(job) {
       await Job.delete(jobId);

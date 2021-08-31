@@ -1,3 +1,5 @@
+const Job = require('../model/Job');
+
 module.exports = {
   getRemainingDays(job) {
     const totalDaysToJob = Math.floor(job['total-hours'] / job['daily-hours']);
@@ -16,5 +18,11 @@ module.exports = {
 
   calculateBudget(job, valueHour) {
     return valueHour * job['total-hours'];
+  },
+
+  async getJobById(id) {
+    const jobs = await Job.get();
+
+    return jobs.find(job => job.id === id);
   },
 };
