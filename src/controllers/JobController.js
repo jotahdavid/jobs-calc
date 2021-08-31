@@ -4,31 +4,23 @@ const JobUtils = require('../utils/JobUtils');
 const Profile = require('../model/Profile');
 
 module.exports = {
-  save(req, res) {
+  async save(req, res) {
     const data = req.body;
-    const jobs = Job.get();
 
-    const jobId = jobs[jobs.length - 1]?.id + 1 || 1;
-
-    Job.update([
-      ...jobs,
-      {
-        id: jobId,
-        name: data.name,
-        'daily-hours': Number(data['daily-hours']),
-        'total-hours': Number(data['total-hours']),
-        'created-at': Date.now()
-      },
-    ]);
-
-    console.log('> Added new job!');
+    await Job.create({
+      name: data.name,
+      'daily-hours': Number(data['daily-hours']),
+      'total-hours': Number(data['total-hours']),
+      'created-at': Date.now()
+    });
 
     return res.redirect('/');
   },
 
-  getById(req, res) {
+  async getById(req, res) {
     const jobId = Number(req.params.id);
-    const jobs = Job.get();
+    const jobs = await Job.get();
+    const profile = await Profile.get();
 
     const job = jobs.find(job => job.id === jobId);
 
@@ -36,7 +28,7 @@ module.exports = {
       return res.redirect('/');
     }
 
-    const budget = JobUtils.calculateBudget(job, Profile.get()['value-per-hour']);
+    const budget = JobUtils.calculateBudget(job, profile['value-per-hour']);
 
     const updatedJob = {
       ...job,
@@ -46,31 +38,34 @@ module.exports = {
     return res.render('job-edit', { job: updatedJob });
   },
 
-  update(req, res) {
+  async update(req, res) {
     const data = req.body;
     const jobId = Number(req.params.id);
-    const jobs = Job.get();
+    const jobs = await Job.get();
     
-    const jobIndex = jobs.findIndex(job => job.id === jobId);
+    const job = jobs.find(job => job.id === jobId);
 
-    if(jobIndex !== -1) {
-      jobs[jobIndex] = {
-        ...jobs[jobIndex],
+    if(job) {
+      await Job.update({
+        ...job,
         name: data.name,
         'daily-hours': Number(data['daily-hours']),
         'total-hours': Number(data['total-hours']),
-      };
-
-      Job.update(jobs);
+      });
     }
 
     return res.redirect('/');
   },
 
-  delete(req, res) {
+  async delete(req, res) {
     const jobId = Number(req.params.id);
+    const jobs = await Job.get();
 
-    Job.delete(jobId);
+    const job = jobs.find(job => job.id === jobId);
+
+    if(job) {
+      await Job.delete(jobId);
+    }
 
     return res.redirect('/');
   },
